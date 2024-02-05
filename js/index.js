@@ -5,18 +5,20 @@ $.ajax({
         type:'GET',
         url:`${BASE_URL}:${BASE_PORT}/${ROUTE_BOARDS}`,
         success:function (result) {
-            console.log(result)
+            // console.log(result)
             result.sort((a,b)=> a.createdAt < b.createdAt)
-            app.append('<div class="ml-4"></div>')
+            // app.append('<div class="vstack gap-2">')
+            let stack = '<div class="vstack gap-2">'
             result.forEach(board => {
-                console.log(board)
+                // console.log(board)
                 // app.append(`<pre>${JSON.stringify(board).replaceAll(',','\n')}</pre>`)
                 // app.append(`<p>${board.title}</p>`)
-                app.append(boarComponent(board)).append('<hr>')
+                stack += boarComponent(board) //.append('<hr>')
 
             })
-            app.find('hr:last').remove()
-            app.append('</div>')
+            stack += '</div>'
+            // app.find('hr:last').remove()
+            app.append(stack)
         },
         error: function (xhr, status, err) {
         console.error(xhr, status, err);
