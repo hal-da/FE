@@ -18,30 +18,31 @@ export const boardComponent = (board) => {
 
 // <!--            <span class="flex-grow-1">by: ${board.createdById.replaceAll('-','-&#8203;')}</span> -->
 
-export const renderBoards = (target = $('#app')) => {
+export const renderBoards = (url = BASE_URL, target = $('#app')) => {
     let res
     $.ajax({
         type:'GET',
-        url:`${BASE_URL}:${BASE_PORT}/${ROUTE_BOARDS}`,
+        url:`${url}:${BASE_PORT}/${ROUTE_BOARDS}`,
         success:function (result) {
-            console.log(result, 'success ', BASE_URL)
             result.sort((a,b)=> a.createdAt < b.createdAt)
             let stack = '<div class="vstack gap-2">'
+            if(!result.length) stack += errorComponent('no boards found')
             result.forEach(board => {
                 console.log(board.id)
                 stack += boardComponent(board)
             })
             stack += '</div>'
-            target.replaceWith(stack)
+            target.empty()
+            target.append(stack)
 
             res = true
-            $('.board').click((e, id    )=> {
+            $('.board').click((e)=> {
                 console.log(e.currentTarget.id)
             })
         },
         error: function (xhr, status, err) {
             console.error(xhr, status, err);
-            target.append(errorComponent('server did not respond'))
+            target.append(errorComponent('server@' + this.url + ' did not respond'))
             res = false
         }
     })
